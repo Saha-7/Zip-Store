@@ -26,7 +26,7 @@ const PORT = 8080 || process.env.PORT
 
 app.get("/", (request, response)=>{
     response.json({
-        message: "Server ok"
+        message: "Server ok" + PORT
     })
 })
 
