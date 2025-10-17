@@ -4,6 +4,9 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import helmet from 'helmet'
+import connectDB from './config/connectDB.js'
+
+
 
 dotenv.config()
 
@@ -13,7 +16,6 @@ app.use(cors({
     credentials: true,
     origin: ""
 }))
-
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan())
@@ -22,13 +24,17 @@ app.use(helmet({
 }))
 
 
-const PORT = 8080 || process.env.PORT
+const PORT = process.env.PORT || 8080
 
 app.get("/", (request, response)=>{
     response.json({
         message: "Server ok" + PORT
     })
 })
+
+
+connectDB()
+
 
 app.listen(PORT,()=>{
     console.log("Server is running on Port : ", PORT)
