@@ -1,3 +1,4 @@
+import sendEmail from "../config/sendEmail";
 import UserModel from "../models/user";
 import { validateSignUpData } from "../utils/validation";
 import bcrypt from 'bcrypt';
@@ -32,6 +33,14 @@ export async function registerUserController(request, response) {
 
     // Save user to DB
     const savedUser = await user.save()
+
+
+
+    const verifyEmail = await sendEmail({
+      sendTo: email,
+      subject: "Verify Email from Zip-Store",
+      html: 
+    })
     
 
     response.json({
