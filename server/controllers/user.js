@@ -1,6 +1,6 @@
 import UserModel from "../models/user";
 
-export async function registerUser(request, response) {
+export async function registerUserController(request, response) {
   try {
     const { name, email, password } = request.body;
     if(!name || !email || !password){
@@ -18,6 +18,7 @@ export async function registerUser(request, response) {
             error: true,
             success: false
         })
+        
     }
   } catch (err) {
     return response.status(500).json({
