@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import connectDB from './config/connectDB.js'
+import userRouter from './routes/user.js'
 
 
 
@@ -33,6 +34,7 @@ app.get("/", (request, response)=>{
 })
 
 
+app.use('/api/user', userRouter)
 
 
 connectDB().then(()=>{
