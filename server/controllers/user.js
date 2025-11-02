@@ -1,7 +1,8 @@
-import sendEmail from "../config/sendEmail";
-import UserModel from "../models/user";
-import { validateSignUpData } from "../utils/validation";
-import bcrypt from 'bcrypt';
+import sendEmail from "../config/sendEmail.js";
+import UserModel from "../models/user.js";
+import { validateSignUpData } from "../utils/validation.js";
+import bcrypt from 'bcryptjs';
+import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 
 const saltRounds = 13
 
@@ -22,7 +23,7 @@ export async function registerUserController(request, response) {
         })
     }
 
-    const passwordHash = await bcrypt.hash(password, 13)
+    const passwordHash = await bcrypt.hash(password, saltRounds)
 
     // creating instance of user model
     const user = new UserModel({
@@ -35,22 +36,83 @@ export async function registerUserController(request, response) {
     const savedUser = await user.save()
 
 
+    // Verification email url
+    const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${savedUser?._id}`
+
+
 
     const verifyEmail = await sendEmail({
       sendTo: email,
       subject: "Verify Email from Zip-Store",
-      html: 
+      html: verifyEmailTemplate({
+        name,
+        url: verifyEmailUrl
+      })
     })
     
 
     response.json({
-      message: "User created successfully", 
+      message: "User registered successfully",
+      error: false,
+      success: true,
       data: savedUser
     })
 
   } catch (err) {
     return response.status(500).json({
       message: err.message || err,
+      error: true,
+      success: true,
+    });
+  }
+}
+
+
+export async function verifyEmailController(req, res){
+  try{
+    // taking the id
+    const {id} = req.body
+
+    // matching that id with respected user in the db
+    const user = await UserModel.findOne({_id: id})
+
+    if(!user){
+      return response.status(400).json({
+        message: "Invalid Code",
+        error: true,
+        success: false
+      })
+    }
+
+    const updateUser = await UserModel.updateOne({
+      verify_email: true
+    })
+
+    return res.json({
+      message: "Email verified",
+      success: true,
+      error: false,
+      data: updateUser
+    })
+
+
+  }catch(error){
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: true,
+    });
+  }
+}
+
+
+// LogIn controller
+export async function loginController(req,res){
+  try{
+
+  }catch(error){
+    return res.status(500).json({
+      message: error.message || error,
       error: true,
       success: true,
     });
