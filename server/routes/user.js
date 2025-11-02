@@ -1,5 +1,5 @@
-import {Router} from 'Express'
-import { registerUserController } from '../controllers/user'
+import {Router} from 'express'
+import { registerUserController } from '../controllers/user.js'
 
 
 const userRouter=Router()

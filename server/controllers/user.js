@@ -1,8 +1,8 @@
-import sendEmail from "../config/sendEmail";
-import UserModel from "../models/user";
-import { validateSignUpData } from "../utils/validation";
-import bcrypt from 'bcrypt';
-import verifyEmailTemplate from "../utils/verifyEmailTemplate";
+import sendEmail from "../config/sendEmail.js";
+import UserModel from "../models/user.js";
+import { validateSignUpData } from "../utils/validation.js";
+import bcrypt from 'bcryptjs';
+import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 
 const saltRounds = 13
 
@@ -23,7 +23,7 @@ export async function registerUserController(request, response) {
         })
     }
 
-    const passwordHash = await bcrypt.hash(password, 13)
+    const passwordHash = await bcrypt.hash(password, saltRounds)
 
     // creating instance of user model
     const user = new UserModel({
