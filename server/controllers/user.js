@@ -2,6 +2,7 @@ import sendEmail from "../config/sendEmail";
 import UserModel from "../models/user";
 import { validateSignUpData } from "../utils/validation";
 import bcrypt from 'bcrypt';
+import verifyEmailTemplate from "../utils/verifyEmailTemplate";
 
 const saltRounds = 13
 
@@ -35,11 +36,18 @@ export async function registerUserController(request, response) {
     const savedUser = await user.save()
 
 
+    // Verification email url
+    const verifyEmailUrl = `${process.env.FRONTEND_URL}`
+
+
 
     const verifyEmail = await sendEmail({
       sendTo: email,
       subject: "Verify Email from Zip-Store",
-      html: 
+      html: verifyEmailTemplate({
+        name,
+        url: 
+      })
     })
     
 
