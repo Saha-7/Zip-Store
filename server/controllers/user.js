@@ -84,9 +84,20 @@ export async function verifyEmailController(req, res){
       })
     }
 
+    const updateUser = await UserModel.updateOne({
+      verify_email: true
+    })
+
+    return res.json({
+      message: "Email verified",
+      success: true,
+      error: false,
+      data: updateUser
+    })
+
 
   }catch(error){
-    return response.status(500).json({
+    return res.status(500).json({
       message: err.message || err,
       error: true,
       success: true,
