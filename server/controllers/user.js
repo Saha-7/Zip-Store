@@ -37,7 +37,7 @@ export async function registerUserController(request, response) {
 
 
     // Verification email url
-    const verifyEmailUrl = `${process.env.FRONTEND_URL}`
+    const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${savedUser?._id}`
 
 
 
@@ -46,13 +46,15 @@ export async function registerUserController(request, response) {
       subject: "Verify Email from Zip-Store",
       html: verifyEmailTemplate({
         name,
-        url: 
+        url: verifyEmailUrl
       })
     })
     
 
     response.json({
-      message: "User created successfully", 
+      message: "User registered successfully",
+      error: false,
+      success: true,
       data: savedUser
     })
 
