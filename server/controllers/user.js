@@ -66,3 +66,30 @@ export async function registerUserController(request, response) {
     });
   }
 }
+
+
+export async function verifyEmailController(req, res){
+  try{
+    // taking the id
+    const {id} = req.body
+
+    // matching that id with respected user in the db
+    const user = await UserModel.findOne({_id: id})
+
+    if(!user){
+      return response.status(400).json({
+        message: "Invalid Code",
+        error: true,
+        success: false
+      })
+    }
+
+
+  }catch(error){
+    return response.status(500).json({
+      message: err.message || err,
+      error: true,
+      success: true,
+    });
+  }
+}
