@@ -98,7 +98,21 @@ export async function verifyEmailController(req, res){
 
   }catch(error){
     return res.status(500).json({
-      message: err.message || err,
+      message: error.message || error,
+      error: true,
+      success: true,
+    });
+  }
+}
+
+
+// LogIn controller
+export async function loginController(req,res){
+  try{
+
+  }catch(error){
+    return res.status(500).json({
+      message: error.message || error,
       error: true,
       success: true,
     });
