@@ -128,7 +128,7 @@ export async function loginController(req,res){
       })
     }
 
-    const isPasswordValid = await user.
+    const isPasswordValid = await user.validatePassword(password)
 
 
 
