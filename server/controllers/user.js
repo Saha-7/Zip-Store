@@ -119,6 +119,19 @@ export async function loginController(req,res){
         success: false
       })
     }
+
+    if(user.status !== "Active"){
+      return response.status(400).json({
+        message: "Contact to Admin",
+        error: true,
+        success: false
+      })
+    }
+
+    const isPasswordValid = await user.
+
+
+
   }catch(error){
     return res.status(500).json({
       message: error.message || error,
