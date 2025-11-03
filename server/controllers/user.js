@@ -109,12 +109,34 @@ export async function verifyEmailController(req, res){
 // LogIn controller
 export async function loginController(req,res){
   try{
+    const {email, password} = req.body
+    const user = await UserModel.findOne({email})
+
+    if(!user){
+      return response.status(400).json({
+        message: "Invalid Credentials",
+        error: true,
+        success: false
+      })
+    }
+
+    if(user.status !== "Active"){
+      return response.status(400).json({
+        message: "Contact to Admin",
+        error: true,
+        success: false
+      })
+    }
+
+    const isPasswordValid = await user.validatePassword(password)
+
+
 
   }catch(error){
     return res.status(500).json({
       message: error.message || error,
       error: true,
-      success: true,
+      success: false,
     });
   }
 }
