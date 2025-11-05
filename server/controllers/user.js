@@ -139,7 +139,7 @@ export async function loginController(req,res){
     }
 
     //creating the token
-    const token = await user
+    
 
 
   }catch(error){
