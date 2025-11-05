@@ -130,6 +130,16 @@ export async function loginController(req,res){
 
     const isPasswordValid = await user.validatePassword(password)
 
+    if(!isPasswordValid){
+      return response.status(400).json({
+        message: "Check your password",
+        error: true,
+        success: false
+      })
+    }
+
+    //creating the token
+    const token = await user
 
 
   }catch(error){
