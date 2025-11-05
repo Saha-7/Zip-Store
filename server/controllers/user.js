@@ -3,6 +3,8 @@ import UserModel from "../models/user.js";
 import { validateSignUpData } from "../utils/validation.js";
 import bcrypt from 'bcryptjs';
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
+import generateAccessToken from "../utils/generateAccessToken.js";
+import generateRefreshToken from "../utils/generateRefreshToken.js";
 
 const saltRounds = 13
 
@@ -139,7 +141,8 @@ export async function loginController(req,res){
     }
 
     //creating the token
-    
+    const accessToken = await generateAccessToken(user._id)
+    const refreshToken = await generateRefreshToken(user._id)
 
 
   }catch(error){
