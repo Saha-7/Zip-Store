@@ -5,7 +5,7 @@ import UserModel from '../models/user.js'
 const generateRefreshToken = async(userId)=>{
     const token = await jwt.sign({
         id: userId},
-        process.env.ACCESS_KEY,
+        process.env.REFRESH_KEY,
         {expiresIn: '3d'}
     )
 

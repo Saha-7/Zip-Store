@@ -114,6 +114,14 @@ export async function loginController(req,res){
     const {email, password} = req.body
     const user = await UserModel.findOne({email})
 
+    if(!email || !password){
+      return res.status(400).json({
+        message: "Email & password both required",
+        error: true,
+        success: false
+      })
+    }
+
     if(!user){
       return res.status(400).json({
         message: "Invalid Credentials",
@@ -169,5 +177,32 @@ export async function loginController(req,res){
       error: true,
       success: false,
     });
+  }
+}
+
+
+// Log out controller
+export async function logoutController(reque, response){
+  try{
+    const cookies_Option = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None"
+    }
+
+    response.clearCookie("accessToken", cookies_Option)
+    response.clearCookie("refreshToken", cookies_Option)
+
+    return response.json({
+      message: "Log Out successful",
+      error: false,
+      success: true
+    })
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
   }
 }
