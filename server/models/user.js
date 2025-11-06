@@ -76,11 +76,11 @@ const userSchema = new mongoose.Schema({
 
 
 
-userSchema.method.validatePassword = async function(inputPasswordByUser){
+userSchema.methods.validatePassword = async function(inputPasswordByUser){
     const user = this
     const originalPassword = user.password
 
-    const isPasswordValid = await bcrypt.compare(originalPassword, inputPasswordByUser)
+    const isPasswordValid = await bcrypt.compare(inputPasswordByUser, originalPassword)
 
     return isPasswordValid
 }
