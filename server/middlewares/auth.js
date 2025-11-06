@@ -4,12 +4,13 @@ const auth = async (request, response, next)=>{
     try{
         const token = request.cookies.accessToken || request?.headers?.authorization?.split(" ")[1]
 
+        console.log("token", token)
         if(!token){
             return response.status(401).json({
                 message: "Provide token"
             })
         }
-        const decode = await jwt.verify(token. process.env.ACCESS_KEY)
+        const decode = await jwt.verify(token, process.env.ACCESS_KEY)
 
         if(!decode){
             return response.status(401).json({

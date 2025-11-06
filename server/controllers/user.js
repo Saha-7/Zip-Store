@@ -196,16 +196,21 @@ export async function logoutController(request, response){
     response.clearCookie("accessToken", cookies_Option)
     response.clearCookie("refreshToken", cookies_Option)
 
-    const removeRefreshToken = await UserModel.findByIdAndUpdate(userid,{
-      refresh_token: ""
-    })
+    const removeRefreshToken = await UserModel.findByIdAndUpdate(
+  userid,
+  { refresh_token: "" },  // Second parameter is the update
+  { new: true }           // Third parameter is options
+)
+
+// Log to verify
+    console.log("After logout - DB refresh_token:", removeRefreshToken)
 
     return response.json({
       message: "Log Out successful",
       error: false,
       success: true
     })
-    
+
   }catch(error){
     return response.status(500).json({
       message: error.message || error,
