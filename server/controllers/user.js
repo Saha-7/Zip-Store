@@ -115,7 +115,7 @@ export async function loginController(req,res){
     const user = await UserModel.findOne({email})
 
     if(!user){
-      return response.status(400).json({
+      return res.status(400).json({
         message: "Invalid Credentials",
         error: true,
         success: false
@@ -123,7 +123,7 @@ export async function loginController(req,res){
     }
 
     if(user.status !== "Active"){
-      return response.status(400).json({
+      return res.status(400).json({
         message: "Contact to Admin",
         error: true,
         success: false
@@ -133,7 +133,7 @@ export async function loginController(req,res){
     const isPasswordValid = await user.validatePassword(password)
 
     if(!isPasswordValid){
-      return response.status(400).json({
+      return res.status(400).json({
         message: "Check your password",
         error: true,
         success: false
@@ -144,6 +144,24 @@ export async function loginController(req,res){
     const accessToken = await generateAccessToken(user._id)
     const refreshToken = await generateRefreshToken(user._id)
 
+    const cookies_Option = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None"
+    }
+
+    res.cookie('accessToken', accessToken, cookies_Option)
+    res.cookie('refreshToken', refreshToken, cookies_Option)
+
+    return res.status(200).json({
+      message: "Login Successful",
+      error: false,
+      success: true,
+      data: {
+        accessToken,
+        refreshToken
+      }
+    })
 
   }catch(error){
     return res.status(500).json({
