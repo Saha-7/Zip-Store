@@ -3,6 +3,8 @@ import UserModel from "../models/user.js";
 import { validateSignUpData } from "../utils/validation.js";
 import bcrypt from 'bcryptjs';
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
+import generateAccessToken from "../utils/generateAccessToken.js";
+import generateRefreshToken from "../utils/generateRefreshToken.js";
 
 const saltRounds = 13
 
@@ -112,8 +114,16 @@ export async function loginController(req,res){
     const {email, password} = req.body
     const user = await UserModel.findOne({email})
 
+    if(!email || !password){
+      return res.status(400).json({
+        message: "Email & password both required",
+        error: true,
+        success: false
+      })
+    }
+
     if(!user){
-      return response.status(400).json({
+      return res.status(400).json({
         message: "Invalid Credentials",
         error: true,
         success: false
@@ -121,7 +131,7 @@ export async function loginController(req,res){
     }
 
     if(user.status !== "Active"){
-      return response.status(400).json({
+      return res.status(400).json({
         message: "Contact to Admin",
         error: true,
         success: false
@@ -130,7 +140,36 @@ export async function loginController(req,res){
 
     const isPasswordValid = await user.validatePassword(password)
 
+    if(!isPasswordValid){
+      return res.status(400).json({
+        message: "Check your password",
+        error: true,
+        success: false
+      })
+    }
 
+    //creating the token
+    const accessToken = await generateAccessToken(user._id)
+    const refreshToken = await generateRefreshToken(user._id)
+
+    const cookies_Option = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None"
+    }
+
+    res.cookie('accessToken', accessToken, cookies_Option)
+    res.cookie('refreshToken', refreshToken, cookies_Option)
+
+    return res.status(200).json({
+      message: "Login Successful",
+      error: false,
+      success: true,
+      data: {
+        accessToken,
+        refreshToken
+      }
+    })
 
   }catch(error){
     return res.status(500).json({
@@ -138,5 +177,45 @@ export async function loginController(req,res){
       error: true,
       success: false,
     });
+  }
+}
+
+
+// Log out controller
+export async function logoutController(request, response){
+  try{
+
+    const userid = request.userId
+
+    const cookies_Option = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None"
+    }
+
+    response.clearCookie("accessToken", cookies_Option)
+    response.clearCookie("refreshToken", cookies_Option)
+
+    const removeRefreshToken = await UserModel.findByIdAndUpdate(
+  userid,
+  { refresh_token: "" },  // Second parameter is the update
+  { new: true }           // Third parameter is options
+)
+
+// Log to verify
+    console.log("After logout - DB refresh_token:", removeRefreshToken)
+
+    return response.json({
+      message: "Log Out successful",
+      error: false,
+      success: true
+    })
+
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
   }
 }
