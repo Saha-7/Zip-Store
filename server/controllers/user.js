@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import generateRefreshToken from "../utils/generateRefreshToken.js";
-
+import uploadImageCloudinary from "../utils/uploadImageCloudinary.js"
 const saltRounds = 13
 
 export async function registerUserController(request, response) {
@@ -209,6 +209,29 @@ export async function logoutController(request, response){
       message: "Log Out successful",
       error: false,
       success: true
+    })
+
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
+
+
+
+//Upload user avatar
+export async function uploadAvatar(request,response){
+  try{
+    const image = request.file
+    const upload = await uploadImageCloudinary(image)
+    console.log("upload", upload)
+
+    return response.json({
+      message: "upload_profile",
+      data: upload
     })
 
   }catch(error){
