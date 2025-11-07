@@ -219,3 +219,18 @@ export async function logoutController(request, response){
     })
   }
 }
+
+
+
+//Upload user avatar
+export async function uploadAvatar(request,response){
+  try{
+
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
