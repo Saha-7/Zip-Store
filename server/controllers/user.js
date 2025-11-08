@@ -225,13 +225,21 @@ export async function logoutController(request, response){
 //Upload user avatar
 export async function uploadAvatar(request,response){
   try{
-    const image = request.file
+    // getting the logged users ID
+    const userid = request.userId //coming from auth middleware
+
+    const image = request.file // coming from multer middleware
     const upload = await uploadImageCloudinary(image)
     console.log("upload", upload)
 
+    await UserModel.findByIdAndUpdate(userid, {avatar: upload?.url})
+
     return response.json({
       message: "upload_profile",
-      data: upload
+      data: {
+        _id: userid,
+        avatar: upload.url
+      }
     })
 
   }catch(error){
