@@ -250,3 +250,31 @@ export async function uploadAvatar(request,response){
     })
   }
 }
+
+
+
+
+
+
+
+// update user details
+export async function updateUserDetails(request, response){
+  try{
+    const id = request.userId //  from auth middleware
+    const{name, email, mobile, password} = request.body
+
+    
+
+    const updateUserDetails = await UserModel.findByIdAndUpdate(id,{
+      ...(name && {name: name}),
+      ...(email && {email: email}),
+      ...(mobile && {mobile: mobile}),
+    })
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
