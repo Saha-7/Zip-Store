@@ -297,8 +297,6 @@ export async function updateUserDetails(request, response){
 
 
 
-
-
 // Forgot password API without login
 export async function forgotPassword(request,response){
   try{
@@ -338,6 +336,25 @@ export async function forgotPassword(request,response){
     })
 
   }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
+
+
+
+
+// OTP verify for Forgot password API without login
+export async function verifyOTPforgotPassword(request, response){
+  const {email, otp} = request.body
+
+  // Finding user by email
+  const user = await UserModel.findOne({email})
+  
+  try{}catch(error){
     return response.status(500).json({
       message: error.message || error,
       error: true,
