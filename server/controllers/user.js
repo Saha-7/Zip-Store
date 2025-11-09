@@ -7,6 +7,7 @@ import generateAccessToken from "../utils/generateAccessToken.js";
 import generateRefreshToken from "../utils/generateRefreshToken.js";
 import uploadImageCloudinary from "../utils/uploadImageCloudinary.js"
 import generatedOTP from "../utils/generateOTP.js";
+import forgotPasswordTemplate from "../utils/forgotpasswordTemplate.js";
 const saltRounds = 13
 
 export async function registerUserController(request, response) {
@@ -302,7 +303,7 @@ export async function updateUserDetails(request, response){
 export async function forgotPassword(request,response){
   try{
     const {email} = request.body
-
+    // Using mail finding the user
     const user = await UserModel.findOne({email})
 
     if(!user){
@@ -327,7 +328,13 @@ export async function forgotPassword(request,response){
     await sendEmail({
       sendTo: email,
       subject: "Forgot Password from Zip Store",
-      html: 
+      html: forgotPasswordTemplate({name : user.name, otp: otp})
+    })
+
+    return response.json({
+      message: "Check Your Email",
+      error: false,
+      success: true
     })
 
   }catch(error){
