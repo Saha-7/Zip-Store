@@ -1,7 +1,6 @@
-`echo "# Zip-Store" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin git@github.com:Saha-7/Zip-Store.git
-git push -u origin main`
+# Zip Store
+
+### Forgot Password Workflow
+`
+Controller(Forgot password) => Send Email(Send OTP) => Controller(Verify OTP) => Controller(Reset Password)
+`
