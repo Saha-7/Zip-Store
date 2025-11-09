@@ -263,12 +263,23 @@ export async function updateUserDetails(request, response){
     const id = request.userId //  from auth middleware
     const{name, email, mobile, password} = request.body
 
-    
+    let passwordHash = ""
+    if(password){
+      const passwordHash = await bcrypt.hash(password, saltRounds)
+    }
 
     const updateUserDetails = await UserModel.findByIdAndUpdate(id,{
       ...(name && {name: name}),
       ...(email && {email: email}),
       ...(mobile && {mobile: mobile}),
+      ...(password && {password: passwordHash})
+    }, {new: true})
+
+    return response.status(200).json({
+      message: "User Details updated successfully",
+      error: false,
+      success: true,
+      data : updateUserDetails
     })
   }catch(error){
     return response.status(500).json({
