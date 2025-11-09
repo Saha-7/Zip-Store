@@ -6,6 +6,8 @@ import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import generateRefreshToken from "../utils/generateRefreshToken.js";
 import uploadImageCloudinary from "../utils/uploadImageCloudinary.js"
+import generatedOTP from "../utils/generateOTP.js";
+import forgotPasswordTemplate from "../utils/forgotpasswordTemplate.js";
 const saltRounds = 13
 
 export async function registerUserController(request, response) {
@@ -243,6 +245,116 @@ export async function uploadAvatar(request,response){
     })
 
   }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
+
+
+
+
+
+
+
+// update user details
+export async function updateUserDetails(request, response){
+  try{
+    const id = request.userId //  from auth middleware
+    const{name, email, mobile, password} = request.body
+
+    let passwordHash = ""
+    if(password){
+      const passwordHash = await bcrypt.hash(password, saltRounds)
+    }
+
+    const updateUserDetails = await UserModel.findByIdAndUpdate(id,{
+      ...(name && {name: name}),
+      ...(email && {email: email}),
+      ...(mobile && {mobile: mobile}),
+      ...(password && {password: passwordHash})
+    }, {new: true})
+
+    return response.status(200).json({
+      message: "User Details updated successfully",
+      error: false,
+      success: true,
+      data : updateUserDetails
+    })
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
+
+
+
+
+
+
+// Forgot password API without login
+export async function forgotPassword(request,response){
+  try{
+    const {email} = request.body
+    // Using mail finding the user
+    const user = await UserModel.findOne({email})
+
+    if(!user){
+      return response.status(400).json({
+        message: "Email Not Available",
+        error: true,
+        success: false
+      })
+    }
+
+    // generate the OTP
+    const otp = generatedOTP()
+    const expireTime = new Date() + 60*60*1000 // 1hour
+
+    // Updating in the DB
+    const update = await UserModel.findByIdAndUpdate(user._id, {
+      forgot_password_otp: otp,
+      forgot_password_expiry: new Date(expireTime).toISOString()
+    })
+
+    // sending Mail
+    await sendEmail({
+      sendTo: email,
+      subject: "Forgot Password from Zip Store",
+      html: forgotPasswordTemplate({name : user.name, otp: otp})
+    })
+
+    return response.json({
+      message: "Check Your Email",
+      error: false,
+      success: true
+    })
+
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
+
+
+
+
+// OTP verify for Forgot password API without login
+export async function verifyOTPforgotPassword(request, response){
+  const {email, otp} = request.body
+
+  // Finding user by email
+  const user = await UserModel.findOne({email})
+  
+  try{}catch(error){
     return response.status(500).json({
       message: error.message || error,
       error: true,
