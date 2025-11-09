@@ -6,6 +6,7 @@ import verifyEmailTemplate from "../utils/verifyEmailTemplate.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import generateRefreshToken from "../utils/generateRefreshToken.js";
 import uploadImageCloudinary from "../utils/uploadImageCloudinary.js"
+import generatedOTP from "../utils/generateOTP.js";
 const saltRounds = 13
 
 export async function registerUserController(request, response) {
@@ -311,7 +312,24 @@ export async function forgotPassword(request,response){
         success: false
       })
     }
-    
+
+    // generate the OTP
+    const otp = generatedOTP()
+    const expireTime = new Date() + 60*60*1000 // 1hour
+
+    // Updating in the DB
+    const update = await UserModel.findByIdAndUpdate(user._id, {
+      forgot_password_otp: otp,
+      forgot_password_expiry: new Date(expireTime).toISOString()
+    })
+
+    // sending Mail
+    await sendEmail({
+      sendTo: email,
+      subject: "Forgot Password from Zip Store",
+      html: 
+    })
+
   }catch(error){
     return response.status(500).json({
       message: error.message || error,
