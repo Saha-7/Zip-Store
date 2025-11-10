@@ -356,7 +356,7 @@ export async function verifyOTPforgotPassword(request, response) {
       });
     }
 
-    const current_Time = new Date()
+    const current_Time = new Date().toISOString()
 
     if (current_Time> user.forgot_password_expiry){
       return response.status(400).json({
@@ -374,6 +374,14 @@ export async function verifyOTPforgotPassword(request, response) {
         success: false,
       });
     }
+
+    //if otp is not expired
+        //otp === user.forgot_password_otp
+
+        const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
+            forgot_password_otp : "",
+            forgot_password_expiry : ""
+        })
 
     return response.status(200).json({
       message: "OTP verified Successfully",
@@ -400,10 +408,38 @@ export async function resetPassword(request, response){
     if(!email || !newPassword || !confirmPassword){
       return response.status(400).json({
         message: "All fields are required",
+      })
+    }
+
+    const user = await UserModel.findOne({email})
+
+    if(!user){
+      return response.status().json({
+        message: "Email not available",
         error: true,
         success: false
       })
     }
+
+    if(newPassword !== confirmPassword){
+      return response.status(400).json({
+        message: "New Password & Confirm Password should match",
+        error: true,
+        success: false
+      })
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, saltRounds);
+
+    const update = await UserModel.findByIdAndUpdate(user._id, {
+      password: passwordHash,
+    })
+
+    return response.json({
+      message: "Password update successful",
+      error: false,
+      success: true
+    })
   }catch(error){
 
   }
