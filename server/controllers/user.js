@@ -455,7 +455,7 @@ export async function refreshToken(request, response) {
       });
     }
 
-    console.log("Decoded Token: ", verifyToken);
+    //console.log("Decoded Token: ", verifyToken);
 
     // taking the user id from token
     const userId = verifyToken?.id;
