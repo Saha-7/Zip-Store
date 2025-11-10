@@ -65,6 +65,8 @@ export async function registerUserController(request, response) {
   }
 }
 
+
+
 export async function verifyEmailController(req, res) {
   try {
     // taking the id
@@ -99,6 +101,8 @@ export async function verifyEmailController(req, res) {
     });
   }
 }
+
+
 
 // LogIn controller
 export async function loginController(req, res) {
@@ -171,6 +175,8 @@ export async function loginController(req, res) {
   }
 }
 
+
+
 // Log out controller
 export async function logoutController(request, response) {
   try {
@@ -208,6 +214,8 @@ export async function logoutController(request, response) {
   }
 }
 
+
+
 //Upload user avatar
 export async function uploadAvatar(request, response) {
   try {
@@ -235,6 +243,8 @@ export async function uploadAvatar(request, response) {
     });
   }
 }
+
+
 
 // update user details
 export async function updateUserDetails(request, response) {
@@ -272,6 +282,8 @@ export async function updateUserDetails(request, response) {
     });
   }
 }
+
+
 
 // Forgot password API without login
 export async function forgotPassword(request, response) {
@@ -319,6 +331,8 @@ export async function forgotPassword(request, response) {
   }
 }
 
+
+
 // OTP verify for Forgot password API without login
 export async function verifyOTPforgotPassword(request, response) {
   try {
@@ -361,11 +375,36 @@ export async function verifyOTPforgotPassword(request, response) {
       });
     }
 
+    return response.status(200).json({
+      message: "OTP verified Successfully",
+      error: false,
+      success: true
+    })
+
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
       error: true,
       success: false,
     });
+  }
+}
+
+
+
+// reset-password API
+export async function resetPassword(request, response){
+  try{
+    const {email, newPassword, confirmPassword} = request.body
+
+    if(!email || !newPassword || !confirmPassword){
+      return response.status(400).json({
+        message: "All fields are required",
+        error: true,
+        success: false
+      })
+    }
+  }catch(error){
+
   }
 }
