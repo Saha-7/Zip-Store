@@ -8,6 +8,7 @@ import generateRefreshToken from "../utils/generateRefreshToken.js";
 import uploadImageCloudinary from "../utils/uploadImageCloudinary.js";
 import generatedOTP from "../utils/generateOTP.js";
 import forgotPasswordTemplate from "../utils/forgotpasswordTemplate.js";
+import jwt from "jsonwebtoken"
 const saltRounds = 13;
 
 export async function registerUserController(request, response) {
@@ -461,7 +462,18 @@ export async function refreshToken(request, response) {
       })
     }
 
-    console.log("refresh token: ", refreshToken)
+    //console.log("refresh token: ", refreshToken)
+
+    const verifyToken = await jwt.verify(refreshToken, process.env.REFRESH_KEY)
+    // If token expired or null or wrong token
+    if(!verifyToken){
+      return response.status(401).json({
+        message: "Invalid Token",
+        error: true,
+        success: false
+      })
+    }
+
   }catch(error){
     return response.status(500).json({
       message: error.message || error,
