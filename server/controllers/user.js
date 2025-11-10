@@ -444,3 +444,29 @@ export async function resetPassword(request, response){
 
   }
 }
+
+
+
+
+// refresh token controller
+export async function refreshToken(request, response) {
+  try{
+    const refreshToken = request.cookies.refreshToken || request?.header?.authorization?.split(" ")[1]  // [Bearer token 1st element]
+
+    if (!refreshToken){
+      return response.status(401).json({
+        message: "Invalid token",
+        error: true,
+        success: false
+      })
+    }
+
+    console.log("refresh token: ", refreshToken)
+  }catch(error){
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    })
+  }
+}
