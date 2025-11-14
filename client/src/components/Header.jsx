@@ -1,9 +1,9 @@
 
 const Header = () => {
   return (
-    <Header classname='h-20'>
+    <header className='h-20 shadow-lg'>
       Header
-    </Header>
+    </header>
   )
 }
 

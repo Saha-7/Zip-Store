@@ -1,9 +1,9 @@
 
 const Footer = () => {
   return (
-    <Footer classname='border-t p-4'>
-      Footer
-    </Footer>
+    <footer className='border-t-gray-400 h-10 text-black'>
+      Foot
+    </footer>
   )
 }
 
