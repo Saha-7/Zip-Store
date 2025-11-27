@@ -1,7 +1,7 @@
 
 const Header = () => {
   return (
-    <header className='h-20 shadow-lg'>
+    <header className='h-17 shadow-lg'>
       Header
     </header>
   )
