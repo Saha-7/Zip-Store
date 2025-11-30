@@ -1,5 +1,6 @@
 import logo from "../assets/logo.png";
 import FullLogo from "../assets/FullLogo.png";
+import Search from "./Search";
 
 const Header = () => {
   return (
@@ -14,7 +15,7 @@ const Header = () => {
         </div>
         {/* search */}
           <div>
-            Search
+            <Search />
           </div>
 
           {/* Login & Cart */}
