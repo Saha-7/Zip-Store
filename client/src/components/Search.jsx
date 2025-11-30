@@ -24,11 +24,14 @@ const Search = () => {
   }
 
   return (
-    <div  className="w-full min-w-[300px] lg:min-w-[420px] h-12 rounded-lg border overflow-hidden text-neutral-500 flex items-center bg-slate-100">
-      <button className="flex justify-center h-full items-center p-2">
+    <div  className="w-full  min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border overflow-hidden flex items-center text-neutral-500 bg-slate-50 group focus-within:border-primary-200">
+      <button className="flex justify-center h-full items-center p-2 group-focus-within:text-primary-200">
         <FaSearch />
       </button>
-      <div onClick={redirectedToSearch} className="w-full pr-2">
+
+      <div className="w-full h-full flex justify-center items-center">
+        {!searchPage? (
+          <div onClick={redirectedToSearch} className="w-full h-full pr-2 items-center flex justify-start">
          <TypeAnimation
       sequence={[
         // Same substring at the start will only be typed out once, initially
@@ -45,6 +48,16 @@ const Search = () => {
       speed={50}
       repeat={Infinity}
     />
+      </div>
+        ):(
+          <div className="w-full h-full">
+            <input className="w-full h-full bg-transparent outline-none"
+            autoFocus
+            type="text"
+            placeholder="Search for items"
+            />
+          </div>
+        )}
       </div>
     </div>
   )
