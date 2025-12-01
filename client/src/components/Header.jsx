@@ -2,6 +2,8 @@ import logo from "../assets/logo.png";
 import FullLogo from "../assets/FullLogo.png";
 import Search from "./Search";
 import { Link } from "react-router-dom";
+import { FaRegUserCircle } from "react-icons/fa";
+
 
 const Header = () => {
   return (
@@ -15,14 +17,23 @@ const Header = () => {
           </Link>
         </div>
         {/* search */}
-          <div>
+          <div className="hidden lg:block">
             <Search />
           </div>
 
           {/* Login & Cart */}
-          <div>
-            Login & Cart
+          <div className="">
+            <button className="lg:hidden">
+              <FaRegUserCircle  size={26}/>
+            </button>
+            <div className="hidden lg:block">
+              Cart
+            </div>
+            
           </div>
+      </div>
+      <div className="mx-auto container px-2 lg:hidden">
+        <Search />
       </div>
     </header>
   );
