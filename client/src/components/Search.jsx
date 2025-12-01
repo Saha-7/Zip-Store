@@ -37,7 +37,7 @@ const Search = () => {
         // Same substring at the start will only be typed out once, initially
         'Search "Milk"',
         1000, // wait 1s before replacing "Mice" with "Hamsters"
-        'Search "Egg"',
+        'Search "Eggs"',
         1000,
         'Search "Paneer"',
         1000,
