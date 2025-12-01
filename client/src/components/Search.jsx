@@ -24,7 +24,7 @@ const Search = () => {
   }
 
   return (
-    <div  className="w-full  min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border overflow-hidden flex items-center text-neutral-500 bg-slate-50 group focus-within:border-primary-200">
+    <div  className="w-full  min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border overflow-hidden flex items-center text-neutral-500 bg-slate-50 focus-within:border-yellow-300 focus-within:text-yellow-500 transition-all duration-200">
       <button className="flex justify-center h-full items-center p-2 group-focus-within:text-primary-200">
         <FaSearch />
       </button>
